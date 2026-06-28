@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Ramya Pinninti" />
+
+<meta name="date" content="2026-06-28" />
+
+<title>Final Project: Good Foods Analysis</title>
+
+<script src="FinalProject_files/header-attrs-2.31/header-attrs.js"></script>
+<script src="FinalProject_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="FinalProject_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="FinalProject_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="FinalProject_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="FinalProject_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="FinalProject_files/navigation-1.1/tabsets.js"></script>
+<link href="FinalProject_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="FinalProject_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="FinalProject_files/kePrint-0.0.1/kePrint.js"></script>
+<link href="FinalProject_files/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Final Project: Good Foods Analysis</h1>
+<h4 class="author">Ramya Pinninti</h4>
+<h4 class="date">2026-06-28</h4>
+
+</div>
+
+
+<style type="text/css">
+#TOC::before {
+  content: "Table of Contents";
+  font-weight: bold;
+  font-size: 1.2em;
+  display: block;
+  color: navy;
+  margin-bottom: 10px;
+}
+
+
+div#TOC li {     /* table of content  */
+    list-style:upper-roman;
+    background-image:none;
+    background-repeat:none;
+    background-position:0;
+}
+
+h1.title {    /* level 1 header of title  */
+  font-size: 22px;
+  font-weight: bold;
+  color: DarkRed;
+  text-align: center;
+  font-family: "Gill Sans", sans-serif;
+}
+
+h4.author { /* Header 4 - and the author and data headers use this too  */
+  font-size: 15px;
+  font-weight: bold;
+  font-family: system-ui;
+  color: navy;
+  text-align: center;
+}
+
+h4.date { /* Header 4 - and the author and data headers use this too  */
+  font-size: 18px;
+  font-weight: bold;
+  font-family: "Gill Sans", sans-serif;
+  color: DarkBlue;
+  text-align: center;
+}
+
+h1 { /* Header 1 - and the author and data headers use this too  */
+    font-size: 20px;
+    font-weight: bold;
+    font-family: "Times New Roman", Times, serif;
+    color: darkred;
+    text-align: center;
+}
+
+h2 { /* Header 2 - and the author and data headers use this too  */
+    font-size: 18px;
+    font-weight: bold;
+    font-family: "Times New Roman", Times, serif;
+    color: navy;
+    text-align: left;
+}
+
+h3 { /* Header 3 - and the author and data headers use this too  */
+    font-size: 16px;
+    font-weight: bold;
+    font-family: "Times New Roman", Times, serif;
+    color: navy;
+    text-align: left;
+}
+
+h4 { /* Header 4 - and the author and data headers use this too  */
+    font-size: 14px;
+  font-weight: bold;
+    font-family: "Times New Roman", Times, serif;
+    color: darkred;
+    text-align: left;
+}
+
+/* Add dots after numbered headers */
+.header-section-number::after {
+  content: ".";
+}
+body { background-color:white; }
+
+.highlightme { background-color:yellow; }
+
+p { background-color:white; }
+
+</style>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>The high sugar content in the majority of processed foods is a widely
+known issue, especially in the United States. Documentaries from the
+last two decades, such as ‘Fed Up’ and ‘That Sugar Film’ have focused
+exclusively on this phenomenon, exploring how sugar affects a healthy
+body and contributes to the U.S. childhood obesity epidemic.</p>
+<p>A WHO (World Health Organization) guideline recommends daily ‘free
+sugar’ consumption be reduced to 25 grams or 6 teaspoons, in order to
+see health benefits in adults and children. However, the ubiquity of
+free sugars demonstrates a paradox—despite their health risks, they are
+a main ingredient in many popular foods—and maintaining a healthy diet
+may involve careful nutritional tracking.</p>
+<p>The ‘Nutritional Analysis Explorer: Open Food Facts’ dashboard allows
+users to explore key relationships between macronutrients and their
+nutritional compositions. Users can explore the relationship between
+‘Carbohydrates’ in the data set and ‘Sugars,’ using the WHO daily sugar
+recommendation threshold to examine products that are of low nutritional
+value.</p>
+</div>
+<div id="background-story-and-data-generation-process"
+class="section level1">
+<h1>Background Story and Data Generation Process</h1>
+<p>This dataset was sourced from Kaggle, using an extract of the
+open-source Open Food Facts database. The target population encompasses
+a wide variety of global food and beverage products, listing nutritional
+metrics per 100g serving. The initial dataset consists of 10,000 raw
+observations. After filtering out records missing key nutritional values
+or displaying extreme energy anomalies, a refined subset of valid,
+audit-ready food records was obtained to analyze systemic
+macro-nutritional risks and sugar thresholds.</p>
+<p><strong>Data Dictionary</strong></p>
+<table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
+<caption>
+Table 1: Variable definitions and types for the analysis dataset
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Variable_Name
+</th>
+<th style="text-align:left;">
+Description
+</th>
+<th style="text-align:left;">
+Variable_Type
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+product_name
+</td>
+<td style="text-align:left;">
+Free-text name of the food product
+</td>
+<td style="text-align:left;">
+Categorical (Text)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+main_category_en
+</td>
+<td style="text-align:left;">
+Standardized, multilingual category tag of the food
+</td>
+<td style="text-align:left;">
+Categorical
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+macro_category
+</td>
+<td style="text-align:left;">
+Audited macro bucket (e.g., Snacks, Pantry, Beverages)
+</td>
+<td style="text-align:left;">
+Categorical (Derived)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+energy-kcal_100g
+</td>
+<td style="text-align:left;">
+Total caloric energy per 100g serving
+</td>
+<td style="text-align:left;">
+Numeric (Continuous)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+carbohydrates_100g
+</td>
+<td style="text-align:left;">
+Total carbohydrate content per 100g serving
+</td>
+<td style="text-align:left;">
+Numeric (Continuous)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sugars_100g
+</td>
+<td style="text-align:left;">
+Total simple sugar content per 100g serving
+</td>
+<td style="text-align:left;">
+Numeric (Continuous)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fat_100g
+</td>
+<td style="text-align:left;">
+Total fat content per 100g serving
+</td>
+<td style="text-align:left;">
+Numeric (Continuous)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+proteins_100g
+</td>
+<td style="text-align:left;">
+Total protein content per 100g serving
+</td>
+<td style="text-align:left;">
+Numeric (Continuous)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+salt_100g
+</td>
+<td style="text-align:left;">
+Total salt content per 100g serving
+</td>
+<td style="text-align:left;">
+Numeric (Continuous)
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="business-questions-and-hypotheses" class="section level1">
+<h1>Business Questions and Hypotheses</h1>
+<p><strong>Business Question 1</strong>: Which broad food
+macro-categories present the highest systemic risk for excessive bulk
+macronutrient density per 100g?</p>
+<p><strong>Business Question 2</strong>: Regardless of the mathematical
+trend, which specific products and brands disproportionately violate the
+25g daily sugar threshold in a single serving?</p>
+<p><strong>Business Question 3</strong>: How does the linear
+relationship between carbohydrates and sugars differ across detailed
+food categories, and which categories impose the steepest ‘sugar
+penalty’?</p>
+<div id="overview-of-food-metrics-analysis" class="section level2">
+<h2>Overview of Food Metrics Analysis</h2>
+<p>This interactive dashboard provides a data-driven look into the
+intersection of global food production, macro-nutritional profiles, and
+environmental sustainability. By cross-referencing fundamental
+macronutrient distributions—such as carbohydrates, fats, and
+proteins—against standardized health frameworks like the Nutri-Score and
+environmental metrics like the Eco-Score, this tool allows researchers,
+policy-makers, and consumers to uncover systemic patterns in our food
+ecosystem. Through exploratory analysis of the top ten food groups, the
+dashboard highlights the critical friction points where high-volume
+consumer staples carry steep nutritional and ecological penalties.</p>
+</div>
+</div>
+<div id="data-story-insights" class="section level1">
+<h1>Data Story &amp; Insights</h1>
+<p><strong>Question: Which broad food macro-categories present the
+highest systemic risk for excessive bulk macronutrient density per
+100g?</strong></p>
+<p>The ‘Nutrient Distribution Boxplot’ tab may be used to examine the
+relationship between certain food categories and excessive macronutrient
+density. The box plots for macro food group categories include ‘Proteins
+and Meats,’ ‘Snacks &amp; Sweets,’ ‘Pantry Staples and Dry Goods,’
+‘Fruits and Veggies,’ ‘Dairy and Cheese,’ ‘Beverages,’ and ‘Prepared
+Meals and Frozen.’</p>
+<p>Observing the proportion of these macronutrients per 100g of food,
+the ‘Carbohydrates’ plots show that ‘Snacks &amp; Sweets’ has the
+highest average carbohydrate proportion. As this category contains foods
+that are heavily processed, such as baked goods and candies, they are
+heavily concentrated with macronutrients of this type, as opposed to
+‘Proteins and Meats,’ which contain very few carbohydrates naturally.
+While there are some outliers in the ‘Proteins &amp; Meats’ category,
+these are products sold in the meat section that include glazes or
+sauces.</p>
+<p>The next highest average is in the ‘Prepared Meals’ section, which
+also contains a high percentage of processed foods such as frozen pastas
+and casseroles. ‘Beverages’ stands out as a category with significant
+outliers, and will be explored further.</p>
+<p><strong>Question: How does the linear relationship between
+carbohydrates and sugars differ across detailed food categories, and
+which categories impose the steepest ‘sugar penalty’?</strong></p>
+<p>This final question explores the relationship between carbohydrates
+and sugars across different categories. The Ordinary Least Squares (OLS)
+regression models comparing sugars (g/100g) to total carbohydrates
+(g/100g) reveal differences in nutritional composition across the macro
+categories. The steepest slopes—or highest “sugar penalties”—are
+observed in ‘Snacks and Sweets’ and ‘Pantry Staples &amp; Dry
+Goods.’</p>
+<p>In these categories, the regression line rises sharply, indicating
+that a large portion of the carbohydrate load consists of rapidly
+digesting simple sugars. This presents a systemic health risk, as
+consumers easily exceed the daily sugar threshold (25g) when consuming
+these products in standard serving sizes.</p>
+<p>In contrast, ‘Proteins &amp; Meats’, ‘Prepared Meals &amp; Frozen’,
+and ‘Dairy &amp; Cheese’ exhibit much flatter slopes. In ‘Proteins &amp;
+Meats’, carbohydrates and sugars remain minimal across the board, with
+only minor deviations caused by glazes or marinades. Similarly, the
+‘Beverages’ regression reflects a bimodal distribution where many
+baseline drinks (like water or unsweetened tea) cluster near zero, while
+outliers—such as sports drink powders and hot cocoa mixes—skyrocket past
+the 25g threshold. Evaluating these group-level slopes allows public
+health professionals to pinpoint which aisles of the grocery store
+contribute to the obesity epidemic.</p>
+<p><strong>Question: Regardless of the mathematical trend, which
+specific products and brands disproportionately violate the 25g daily
+sugar threshold in a single serving?</strong></p>
+<p>An exploration of scatterplots by macro category, focusing on
+products that violate the WHO-advised daily sugar limit, reveals trends
+in the data set. ‘Snacks &amp; Sweets’, unsurprisingly, is the category
+with the highest number of products crossing the daily sugar threshold.
+Snacks such as cotton candy, halloween candy corn, Valentine’s Heart
+lollipops are some of the highest offenders. These products are seasonal
+and do not pose a serious health risk if enjoyed in moderation.</p>
+<p>However, products like ‘That’s It’ fruit bars, ‘Starlight mints,’ and
+‘Fig &amp; almond dried fruit cake,’ are products that consumers may
+purchase, believing them to be a slightly healthier compromise, while
+they are also incredibly high in sugar.</p>
+<p>The ‘Beverages’ scatterplot shows that there is a high proportion of
+sugars in certain beverages such as the ‘Hydrate and Perform’ and ‘ISO’
+sports drinks, along with sugar-packed, banana-flavored mixes and hot
+cocoa mixes. With respect to sports drinks, this suggests a trade-off
+between carbohydrates needed for water retention and immediate athletic
+performance and the health effects from depending on sugary mixes for
+athletic performance.</p>
+<p>‘Pantry Staples &amp; Dry Goods’ reveals an interesting trend that
+food documentaries have touched on in recent years. Store-bought staples
+such as BBQ Sauce, Gochujang, and Ketchup all exceed the daily
+recommended sugar intake. Kids’ cereals, along with supposedly healthy
+cereals such as Raisin Bran, also exceed the sugar threshold. As these
+are products that are easily incorporated into daily routines, products
+from ‘Beverages’ and ‘Pantry Staples’ are especially concerning.</p>
+</div>
+<div id="conclusion" class="section level1">
+<h1>Conclusion</h1>
+<p>n conclusion, this analysis confirms that excessive simple sugar
+density is a systemic issue spanning multiple grocery aisles rather than
+an isolated problem limited to confectioneries. While seasonal treats
+present predictable sugar spikes, the true public health concern lies in
+daily, seemingly innocuous staples like beverages, sauces, and ‘healthy’
+cereals that routinely violate WHO daily sugar thresholds. Transitioning
+this exploratory data logic into an interactive R Shiny application
+successfully democratizes these insights, giving consumers and health
+professionals the visibility needed to navigate hidden sugar penalties
+and make informed dietary choices.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

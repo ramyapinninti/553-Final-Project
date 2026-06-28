@@ -1,0 +1,264 @@
+---
+title: "Final Project: Good Foods Analysis"
+author: "Ramya Pinninti"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    self_contained: false
+    always_allow_html: true
+editor_options: 
+  chunk_output_type: inline
+
+---
+
+
+
+```{css, echo = FALSE}
+#TOC::before {
+  content: "Table of Contents";
+  font-weight: bold;
+  font-size: 1.2em;
+  display: block;
+  color: navy;
+  margin-bottom: 10px;
+}
+
+
+div#TOC li {     /* table of content  */
+    list-style:upper-roman;
+    background-image:none;
+    background-repeat:none;
+    background-position:0;
+}
+
+h1.title {    /* level 1 header of title  */
+  font-size: 22px;
+  font-weight: bold;
+  color: DarkRed;
+  text-align: center;
+  font-family: "Gill Sans", sans-serif;
+}
+
+h4.author { /* Header 4 - and the author and data headers use this too  */
+  font-size: 15px;
+  font-weight: bold;
+  font-family: system-ui;
+  color: navy;
+  text-align: center;
+}
+
+h4.date { /* Header 4 - and the author and data headers use this too  */
+  font-size: 18px;
+  font-weight: bold;
+  font-family: "Gill Sans", sans-serif;
+  color: DarkBlue;
+  text-align: center;
+}
+
+h1 { /* Header 1 - and the author and data headers use this too  */
+    font-size: 20px;
+    font-weight: bold;
+    font-family: "Times New Roman", Times, serif;
+    color: darkred;
+    text-align: center;
+}
+
+h2 { /* Header 2 - and the author and data headers use this too  */
+    font-size: 18px;
+    font-weight: bold;
+    font-family: "Times New Roman", Times, serif;
+    color: navy;
+    text-align: left;
+}
+
+h3 { /* Header 3 - and the author and data headers use this too  */
+    font-size: 16px;
+    font-weight: bold;
+    font-family: "Times New Roman", Times, serif;
+    color: navy;
+    text-align: left;
+}
+
+h4 { /* Header 4 - and the author and data headers use this too  */
+    font-size: 14px;
+  font-weight: bold;
+    font-family: "Times New Roman", Times, serif;
+    color: darkred;
+    text-align: left;
+}
+
+/* Add dots after numbered headers */
+.header-section-number::after {
+  content: ".";
+}
+body { background-color:white; }
+
+.highlightme { background-color:yellow; }
+
+p { background-color:white; }
+
+```
+
+
+
+```{r setup, include=FALSE}
+# Global chunk options
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  comment = "",
+  fig.width = 10,
+  fig.height = 6,
+  fig.align = "center"
+)
+
+if (!require("kableExtra")) {
+   install.packages("kableExtra")
+   library(kableExtra)
+}
+if (!require("car")) {
+   install.packages("car")
+   library(car)
+}
+if (!require("broom")) {
+   install.packages("broom")
+   library(broom)
+}
+if (!require("patchwork")) {
+   install.packages("patchwork")
+   library(patchwork)
+}
+if (!require("treemapify")) {
+   install.packages("treemapify")
+   library(treemapify)
+}
+if (!require("leaflet")) {      
+   install.packages("leaflet")
+   library(leaflet)
+}
+library(tidyverse)    # For data manipulation and visualization
+library(ggplot2)      # For advanced plotting
+library(naniar)       # For missing data visualization
+library(skimr)        # For compact data summaries
+library(GGally)       # For parallel coordinate plots
+library(plotly)       # For interactive visualizations
+library(DT)           # For interactive tables
+library(scales)       # For formatting numbers
+library(stringr)      # For string operations
+library(patchwork)    # For layout stitching
+library(kableExtra)   # For premium table layouts
+library(car)          # For interactive tables
+
+
+# Custom theme for consistent visual design
+theme_storytelling <- theme_minimal() +
+  theme(
+    plot.title = element_text(size = 16, face = "bold", margin = margin(b = 10)),
+    plot.subtitle = element_text(size = 12, color = "grey40"),
+    axis.title = element_text(size = 11),
+    axis.text = element_text(size = 10),
+    legend.position = "bottom",
+    panel.grid.major = element_line(color = "grey90"),
+    panel.grid.minor = element_blank(),
+    plot.margin = margin(20, 20, 20, 20)
+  )
+```
+
+
+# Introduction
+
+  The high sugar content in the majority of processed foods is a widely known issue, especially in the United States. Documentaries from the last two decades, such as ‘Fed Up’ and ‘That Sugar Film’ have focused exclusively on this phenomenon, exploring how sugar affects a healthy body and contributes to the U.S. childhood obesity epidemic. 
+
+  A WHO (World Health Organization) guideline recommends daily ‘free sugar’  consumption be reduced to 25 grams or 6 teaspoons, in order to see health benefits in adults and children. However, the ubiquity of free sugars demonstrates a paradox—despite their health risks, they are a main ingredient in many popular foods—and maintaining a healthy diet may involve careful nutritional tracking.
+
+  The ‘Nutritional Analysis Explorer: Open Food Facts’ dashboard allows users to explore key relationships between macronutrients and their nutritional compositions. Users can explore the relationship between ‘Carbohydrates’ in the data set and ‘Sugars,’ using the WHO daily sugar recommendation threshold to examine products that are of low nutritional value. 
+
+# Background Story and Data Generation Process
+
+This dataset was sourced from Kaggle, using an extract of the open-source Open Food Facts database. The target population encompasses a wide variety of global food and beverage products, listing nutritional metrics per 100g serving. The initial dataset consists of 10,000 raw observations. After filtering out records missing key nutritional values or displaying extreme energy anomalies, a refined subset of valid, audit-ready food records was obtained to analyze systemic macro-nutritional risks and sugar thresholds. 
+
+
+**Data Dictionary**
+
+
+```{r, echo=FALSE}
+# Create an interactive data dictionary
+library(tibble)
+library(DT)
+
+# Create an interactive data dictionary for the Health Food Dashboard
+data_dictionary <- tribble(
+  ~Variable_Name,      ~Description,                                            ~Variable_Type,
+  "product_name",      "Free-text name of the food product",                    "Categorical (Text)",
+  "main_category_en",  "Standardized, multilingual category tag of the food",   "Categorical",
+  "macro_category",    "Audited macro bucket (e.g., Snacks, Pantry, Beverages)", "Categorical (Derived)",
+  "energy-kcal_100g",  "Total caloric energy per 100g serving",                 "Numeric (Continuous)",
+  "carbohydrates_100g","Total carbohydrate content per 100g serving",            "Numeric (Continuous)",
+  "sugars_100g",       "Total simple sugar content per 100g serving",           "Numeric (Continuous)",
+  "fat_100g",          "Total fat content per 100g serving",                    "Numeric (Continuous)",
+  "proteins_100g",     "Total protein content per 100g serving",                "Numeric (Continuous)",
+  "salt_100g",         "Total salt content per 100g serving",                   "Numeric (Continuous)"
+)
+
+knitr::kable(
+  data_dictionary, 
+  caption = "Table 1: Variable definitions and types for the analysis dataset"
+) %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+```
+
+
+
+
+# Business Questions and Hypotheses
+
+
+**Business Question 1**: Which broad food macro-categories present the highest systemic risk for excessive bulk macronutrient density per 100g?
+
+**Business Question 2**: Regardless of the mathematical trend, which specific products and brands disproportionately violate the 25g daily sugar threshold in a single serving?
+
+**Business Question 3**: How does the linear relationship between carbohydrates and sugars differ across detailed food categories, and which categories impose the steepest 'sugar penalty'?
+
+## Overview of Food Metrics Analysis
+
+  This interactive dashboard provides a data-driven look into the intersection of global food production, macro-nutritional profiles, and environmental sustainability. By cross-referencing fundamental macronutrient distributions—such as carbohydrates, fats, and proteins—against standardized health frameworks like the Nutri-Score and environmental metrics like the Eco-Score, this tool allows researchers, policy-makers, and consumers to uncover systemic patterns in our food ecosystem. Through exploratory analysis of the top ten food groups, the dashboard highlights the critical friction points where high-volume consumer staples carry steep nutritional and ecological penalties.
+
+
+# Data Story & Insights
+
+
+**Question: Which broad food macro-categories present the highest systemic risk for excessive bulk macronutrient density per 100g?**
+
+  The ‘Nutrient Distribution Boxplot’ tab may be used to examine the relationship between certain food categories and excessive macronutrient density. The box plots for macro food group categories include ‘Proteins and Meats,’ ‘Snacks & Sweets,’ ‘Pantry Staples and Dry Goods,’ ‘Fruits and Veggies,’ ‘Dairy and Cheese,’  ‘Beverages,’ and ‘Prepared Meals and Frozen.’ 
+
+  Observing the proportion of these macronutrients per 100g of food, the ‘Carbohydrates’ plots show that ‘Snacks & Sweets’ has the highest average carbohydrate proportion. As this category contains foods that are heavily processed, such as baked goods and candies, they are heavily concentrated with macronutrients of this type, as opposed to ‘Proteins and Meats,’ which contain very few carbohydrates naturally. While there are some outliers in the ‘Proteins & Meats’ category, these are products sold in the meat section that include glazes or sauces. 
+
+  The next highest average is in the ‘Prepared Meals’ section, which also contains a high percentage of processed foods such as frozen pastas and casseroles. ‘Beverages’ stands out as a category with significant outliers, and will be explored further. 
+
+**Question: How does the linear relationship between carbohydrates and sugars differ across detailed food categories, and which categories impose the steepest 'sugar penalty'?**
+
+
+  This final question explores the relationship between carbohydrates and sugars across different categories. The Ordinary Least Squares (OLS) regression models comparing sugars (g/100g) to total carbohydrates (g/100g) reveal differences in nutritional composition across the macro categories. The steepest slopes—or highest "sugar penalties"—are observed in ‘Snacks and Sweets’ and ‘Pantry Staples & Dry Goods.’
+
+  In these categories, the regression line rises sharply, indicating that a large portion of the carbohydrate load consists of rapidly digesting simple sugars. This presents a systemic health risk, as consumers easily exceed the daily sugar threshold (25g) when consuming these products in standard serving sizes.
+
+  In contrast, ‘Proteins & Meats’, ‘Prepared Meals & Frozen’, and ‘Dairy & Cheese’ exhibit much flatter slopes. In ‘Proteins & Meats’, carbohydrates and sugars remain minimal across the board, with only minor deviations caused by glazes or marinades. Similarly, the ‘Beverages’ regression reflects a bimodal distribution where many baseline drinks (like water or unsweetened tea) cluster near zero, while outliers—such as sports drink powders and hot cocoa mixes—skyrocket past the 25g threshold. Evaluating these group-level slopes allows public health professionals to pinpoint which aisles of the grocery store contribute to the obesity epidemic.
+
+
+**Question: Regardless of the mathematical trend, which specific products and brands disproportionately violate the 25g daily sugar threshold in a single serving?**
+
+  An exploration of scatterplots by macro category, focusing on products that violate the WHO-advised daily sugar limit, reveals trends in the data set. ‘Snacks & Sweets’, unsurprisingly, is the category with the highest number of products crossing the daily sugar threshold. Snacks such as cotton candy, halloween candy corn, Valentine’s Heart lollipops are some of the highest offenders. These products are seasonal and do not pose a serious health risk if enjoyed in moderation. 
+
+  However, products like ‘That’s It’ fruit bars, ‘Starlight mints,’ and ‘Fig & almond dried fruit cake,’ are products that consumers may purchase, believing them to be a slightly healthier compromise, while they are also incredibly high in sugar. 
+
+  The ‘Beverages’ scatterplot shows that there is a high proportion of sugars in certain beverages such as the ‘Hydrate and Perform’ and ‘ISO’ sports drinks, along with sugar-packed, banana-flavored mixes and hot cocoa mixes. With respect to sports drinks, this suggests a trade-off between carbohydrates needed for water retention and immediate athletic performance and the health effects from depending on sugary mixes for athletic performance. 
+
+  ‘Pantry Staples & Dry Goods’ reveals an interesting trend that food documentaries have touched on in recent years. Store-bought staples such as BBQ Sauce, Gochujang, and Ketchup all exceed the daily recommended sugar intake. Kids’ cereals, along with supposedly healthy cereals such as Raisin Bran, also exceed the sugar threshold. As these are products that are easily incorporated into daily routines, products from ‘Beverages’ and ‘Pantry Staples’ are especially concerning. 
+
+
+
+# Conclusion 
+
+n conclusion, this analysis confirms that excessive simple sugar density is a systemic issue spanning multiple grocery aisles rather than an isolated problem limited to confectioneries. While seasonal treats present predictable sugar spikes, the true public health concern lies in daily, seemingly innocuous staples like beverages, sauces, and 'healthy' cereals that routinely violate WHO daily sugar thresholds. Transitioning this exploratory data logic into an interactive R Shiny application successfully democratizes these insights, giving consumers and health professionals the visibility needed to navigate hidden sugar penalties and make informed dietary choices.
+
